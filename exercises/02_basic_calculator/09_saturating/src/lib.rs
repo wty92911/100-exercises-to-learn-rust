@@ -3,7 +3,11 @@ pub fn factorial(n: u32) -> u32 {
     for i in 1..=n {
         // Use saturating multiplication to stop at the maximum value of u32
         // rather than overflowing and wrapping around
-        result *= i;
+        if result >= u32::MAX / i {
+            result = u32::MAX;
+        } else {
+            result *= i;
+        }
     }
     result
 }
