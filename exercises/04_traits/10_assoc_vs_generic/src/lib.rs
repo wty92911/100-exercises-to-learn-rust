@@ -13,6 +13,45 @@
 // You don't have to though: it's perfectly okay to write three separate
 // implementations manually. Venture further only if you're curious.
 
+use num_traits::{self, ToPrimitive};
+trait Power<E> {
+    type Output;
+    fn power(self, n: E) -> Self::Output;
+}
+
+impl<E> Power<E> for u32
+where
+    E: ToU32,
+{
+    type Output = u32;
+    fn power(self, n: E) -> Self::Output {
+        let e = n.to_u32();
+        self.pow(e)
+    }
+}
+
+trait ToU32 {
+    fn to_u32(self) -> u32;
+}
+
+impl ToU32 for u32 {
+    fn to_u32(self) -> u32 {
+        self
+    }
+}
+
+impl<'a> ToU32 for &'a u32 {
+    fn to_u32(self) -> u32 {
+        *self
+    }
+}
+
+impl ToU32 for u16 {
+    fn to_u32(self) -> u32 {
+        self as u32
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::Power;
