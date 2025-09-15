@@ -10,12 +10,29 @@
 //
 // We expect `fibonacci(0)` to return `0`, `fibonacci(1)` to return `1`,
 // `fibonacci(2)` to return `1`, and so on.
+static mut MEM: Vec<Option<u32>> = vec![];
 pub fn fibonacci(n: u32) -> u32 {
     // TODO: implement the `fibonacci` function
     //
     // Hint: use a `Vec` to memoize the results you have already calculated
     // so that you don't have to recalculate them several times.
-    todo!()
+
+    unsafe {
+        match MEM.get(n as usize) {
+            Some(Some(v)) => return *v,
+            None => unsafe { MEM.resize(n as usize + 1, None) },
+            _ => (),
+        }
+    }
+
+    let v = match n {
+        0 => 0,
+        1 => 1,
+        2 => 1,
+        _ => fibonacci(n - 1) + fibonacci(n - 2),
+    };
+    unsafe { MEM[n as usize] = Some(v) };
+    v
 }
 
 #[cfg(test)]

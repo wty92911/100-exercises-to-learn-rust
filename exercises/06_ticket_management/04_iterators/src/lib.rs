@@ -37,6 +37,10 @@ impl TicketStore {
     pub fn add_ticket(&mut self, ticket: Ticket) {
         self.tickets.push(ticket);
     }
+
+    pub fn into_iter(self) -> impl Iterator<Item = Ticket> {
+        self.tickets.into_iter()
+    }
 }
 
 #[cfg(test)]

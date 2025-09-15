@@ -6,10 +6,12 @@
 // You also need to add a `get` method that takes as input a `TicketId`
 // and returns an `Option<&Ticket>`.
 
+use rand::{self, Rng};
 use ticket_fields::{TicketDescription, TicketTitle};
 
 #[derive(Clone)]
 pub struct TicketStore {
+    ids: Vec<TicketId>,
     tickets: Vec<Ticket>,
 }
 
@@ -40,12 +42,25 @@ pub enum Status {
 impl TicketStore {
     pub fn new() -> Self {
         Self {
+            ids: Vec::new(),
             tickets: Vec::new(),
         }
     }
 
-    pub fn add_ticket(&mut self, ticket: Ticket) {
-        self.tickets.push(ticket);
+    pub fn add_ticket(&mut self, ticket: TicketDraft) -> TicketId {
+        let mut rng = rand::rng();
+        let id = TicketId(rng.random::<u64>());
+        self.tickets.push(Ticket {
+            id: id,
+            title: ticket.title,
+            description: ticket.description,
+            status: Status::ToDo,
+        });
+        id
+    }
+
+    pub fn get(&self, id: TicketId) -> Option<&Ticket> {
+        self.tickets.iter().find(|t| t.id == id)
     }
 }
 
