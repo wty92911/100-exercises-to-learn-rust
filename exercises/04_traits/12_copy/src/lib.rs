@@ -16,7 +16,7 @@ impl std::ops::Add for WrappingU32 {
     type Output = WrappingU32;
     fn add(self, rhs: Self) -> Self::Output {
         WrappingU32 {
-            value: self.value.clone() + rhs.value.clone(),
+            value: self.value.wrapping_add(rhs.value),
         }
     }
 }

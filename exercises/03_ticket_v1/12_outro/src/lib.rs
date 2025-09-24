@@ -20,6 +20,12 @@ pub struct Order {
 
 impl Order {
     pub fn new(product_name: String, quantity: u32, unit_price: u32) -> Order {
+        if product_name.is_empty() || product_name.as_bytes().len() > 300 {
+            panic!()
+        }
+        if quantity <= 0 || unit_price <= 0 {
+            panic!()
+        }
         Order {
             product_name,
             quantity,

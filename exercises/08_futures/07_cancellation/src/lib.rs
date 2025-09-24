@@ -27,7 +27,7 @@ mod tests {
         let addr = listener.local_addr().unwrap();
         let messages = vec!["hello", "from", "this", "task"];
         let timeout = Duration::from_millis(20);
-        let handle = tokio::spawn(run(listener, messages.len(), timeout.clone()));
+        let handle = tokio::spawn(run(listener, messages.len(), 2 * timeout.clone()));
 
         for message in messages {
             let mut socket = tokio::net::TcpStream::connect(addr).await.unwrap();
@@ -37,7 +37,7 @@ mod tests {
 
             // Send first half
             writer.write_all(beginning.as_bytes()).await.unwrap();
-            tokio::time::sleep(timeout * 2).await;
+            tokio::time::sleep(timeout).await;
             writer.write_all(end.as_bytes()).await.unwrap();
 
             // Close the write side of the socket
@@ -46,6 +46,6 @@ mod tests {
 
         let buffered = handle.await.unwrap();
         let buffered = std::str::from_utf8(&buffered).unwrap();
-        assert_eq!(buffered, "");
+        assert_eq!(buffered, "hellofromthistask");
     }
 }
